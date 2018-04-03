@@ -1,4 +1,5 @@
 from flask import Flask, url_for, request, abort, redirect, session, render_template, escape, flash, g
+from flask.views import View
 from flask_sqlalchemy import SQLAlchemy
 import settings
 import os
@@ -46,9 +47,23 @@ def indexView():
     return 'Hello!'
 
 
-@app.route('/profile/<username>', methods=['GET', 'POST'])
-def profileView(username):
-    return url_for("profile", username=username)
+# @app.route('/profile/<username>', methods=['GET', 'POST'])
+# def profileView(username):
+#     return url_for("profile", username=username)
+
+
+class ShowProfileView(View):
+    methods = ['GET', 'POST']
+
+    def dispatch_request(self, username):
+        if request.method == 'POST':
+            return "Forbidden POST"
+        else:
+            return "Profile:\n%s" % (username)
+
+
+app.add_url_rule('/profile/<username>',
+                 view_func=ShowProfileView.as_view("show_profile"))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -106,7 +121,7 @@ def record_templates(app):
 
 
 if __name__ == '__main__':
-    # app.debug = True
+    app.debug = True
     app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
     with record_templates(app) as template_rendered_record:
         app.run(port=getattr(
