@@ -18,3 +18,4 @@ virtualenv==15.1.0
 Werkzeug==0.14.1
 wrapt==1.10.10
 flask-restful==0.3.6
+graphene

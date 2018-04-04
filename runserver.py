@@ -20,14 +20,14 @@ def record_templates(app):
 
 
 def configBluePrint(flask_app):
-    flask_app.register_blueprint(api_app, url_prefix='/api')
+    flask_app.register_blueprint(api_app, url_prefix='/api/v1')
     flask_app.register_blueprint(web_app)
     print(app.url_map)
 
 
 if __name__ == '__main__':
     with record_templates(app) as template_rendered_record:
-        app.debug = True
+        # app.debug = True
         configBluePrint(app)
         app.run(port=getattr(
             global_settings, "WEBPROT"))
