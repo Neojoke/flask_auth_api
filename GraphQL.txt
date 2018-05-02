@@ -1,0 +1,130 @@
+传统API定义
+http://*****.com/api/v1/getTodo?task_id="task4"
+http://*****.com/api/v1/addTodo?task_id="task4"&task=""&description=""
+
+
+Restful
+
+Resource Todos
+{
+	put:(task_id,task,description)=>{
+		return db.InsertTodos(task,task_id,task,description)
+	}
+	get:(task_id)=>{
+		return db.SelectTodos(task_id)
+	}
+}
+
+curl -X PUT \
+  http://localhost:8122/api/v1/todos/todo4 \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "task": "build an API",
+    "description": "task4"
+}'
+
+curl -X GET \
+  http://localhost:8122/api/v1/todos/todo4 \
+  -H 'Content-Type: application/json' 
+
+服务端查询定义：
+schema {
+	query:Query
+	mutation:Mutation
+}
+
+type Query {
+	todo(task_id:String): TodoTask
+}
+
+type TodoTask {
+	task_id:String
+	task:String
+	description:String
+}
+
+type Mutation {
+	createTodo:Mutation
+}
+
+type createTodo {
+	todo:TodoTask
+	ok:Boolean
+}
+客户端输入：
+
+query getTodo($taskId:String!) { 
+	todo(taskId:$taskId) { 
+		task 
+		description 
+	} 
+}
+
+mutation createTodo { 
+	createTodo(taskId:"todo4",task:"do something",description:"no.4") { 
+		todo { 
+			task         
+			description 
+		} 
+		ok 
+	} 
+}
+
+curl -X POST \
+  http://localhost:8122/api/v1/ql \
+  -H 'Content-Type: application/json' \
+  -d '{
+	"query":"mutation createTodo { createTodo(taskId:\"todo4\",task:\"do something\",description:\"no.4\") { todo { task         description } ok } }"
+}'
+
+curl -X POST \
+  http://localhost:8122/api/v1/ql \
+  -H 'Content-Type: application/json' \
+  -d '{
+	"query":"query getTodo($taskId:String!) { todo(taskId:$taskId) { task description } }",
+	"variables":{
+		"taskId":"todo4"
+	}
+}'
+
+首页拆解：
+user
+banners
+modules
+topline
+conditionList
+learnExpress
+hotnews
+optionBtn
+activity
+
+
+type Query {
+	user(userId:String):userObj
+	banners(userId:String,type:String):List[ConfigObj]
+	modules(userId:String,type:String):List[ConfigObj]
+	topline(userId:String,type:String):List[ConfigObj]
+	conditionList(userId:String):conditionListObj
+	learnExpress(userId:String):learnExpressObj
+	hotnews(userId:String):List(newsObj)
+	optionBtn(userId:String):List[ConfigObj]
+	activity(userId:String):activityObj
+}
+type user {
+	headImage
+}
+type ConfigObj{
+
+}
+type conditionListObj{
+	
+}
+type learnExpressObj{
+	
+}
+type newsObj{
+	
+}
+type activityObj{
+	
+}
