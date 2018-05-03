@@ -26,13 +26,10 @@ def get_db():
     return db_connector
 
 
-app = Flask(__name__)
-app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-db = SQLAlchemy()
-global_settings = GlobalSetting(settings)
-app.config['SQLALCHEMY_DATABASE_URI'] = hasattr(
-    global_settings, "SQLALCHEMY_DATABASE_URI")
-db.init_app(app)
+def configBluePrint(flask_app):
+    flask_app.register_blueprint(api_app, url_prefix='/api/v1')
+    flask_app.register_blueprint(web_app)
+    print(app.url_map)
 
 
 @contextmanager
@@ -50,15 +47,19 @@ def record_templates(app):
         template_rendered.disconnect(record, app)
 
 
-def configBluePrint(flask_app):
-    flask_app.register_blueprint(api_app, url_prefix='/api/v1')
-    flask_app.register_blueprint(web_app)
-    print(app.url_map)
+app = Flask(__name__)
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+db = SQLAlchemy()
+global_settings = GlobalSetting(settings)
+app.config['SQLALCHEMY_DATABASE_URI'] = hasattr(
+    global_settings, "SQLALCHEMY_DATABASE_URI")
+db.init_app(app)
+configBluePrint(app)
+with record_templates(app) as template_rendered_record:
+    pass
 
 
 if __name__ == '__main__':
-    with record_templates(app) as template_rendered_record:
-        # app.debug = True
-        configBluePrint(app)
-        app.run(port=getattr(
-            global_settings, "WEBPROT"))
+    # app.debug = True
+    app.run(port=getattr(
+        global_settings, "WEBPROT"))
