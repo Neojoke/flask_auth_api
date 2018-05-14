@@ -1,9 +1,9 @@
 from .models import User
-from flask import request, session, escape, redirect, url_for, render_template, Blueprint, g
+from flask import request, session, escape, redirect, url_for, render_template, Blueprint
 from flask.views import View
 
 web_app = Blueprint("web_app", __name__)
-
+from db import db
 
 @web_app.route('/')
 def indexView():
@@ -54,8 +54,8 @@ def add_user():
     phone = request.args.get('phone', None)
     if username is not None and phone is not None:
         user = User(username=username, phone=phone)
-        g.mysql_db().session.add(user)
-        g.mysql_db().session.commit()
+        db.session.add(user)
+        db.session.commit()
     return "Ok!"
 
 
