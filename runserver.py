@@ -23,7 +23,7 @@ def record_templates(app):
         template_rendered.disconnect(record, app)
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 config_db(app)
 
